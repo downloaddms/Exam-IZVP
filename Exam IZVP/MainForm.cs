@@ -1,76 +1,86 @@
 ﻿using System;
-using System.Drawing;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
-using Exam_IZVP.UI;
+using Exam_IZVP.Core;
 
-namespace Exam_IZVP
+namespace Exam_IZVP.UI
 {
     public partial class MainForm : BaseForm
     {
-        private Button testButton;
-        private Label titleLabel;
+        private List<Student> _students = new List<Student>();
 
         public MainForm()
         {
-            InitializeComponent(); // Викликає метод з Designer.cs
-            CreateUI(); // Тепер додаємо наші елементи
+            InitializeComponent();
+            InitializeLanguageList();
         }
 
-        private void CreateUI()
+        private void InitializeLanguageList()
         {
-            // 1. Заголовок
-            titleLabel = new Label();
-            titleLabel.Text = "ЛАБОРАТОРНІ РОБОТИ IZVP";
-            titleLabel.Font = new Font("Arial", 16, FontStyle.Bold);
-            titleLabel.ForeColor = Color.DarkBlue;
-            titleLabel.Size = new Size(450, 40);
-            titleLabel.Location = new Point(25, 30);
-            titleLabel.TextAlign = ContentAlignment.MiddleCenter;
-
-            // 2. Кнопка тесту
-            testButton = new Button();
-            testButton.Text = "ПЕРЕВІРИТИ СИСТЕМУ";
-            testButton.Font = new Font("Arial", 12, FontStyle.Bold);
-            testButton.BackColor = Color.LightGreen;
-            testButton.ForeColor = Color.Black;
-            testButton.Size = new Size(250, 60);
-            testButton.Location = new Point(125, 100);
-            testButton.Click += TestButton_Click;
-
-            // 3. Інфо текст
-            Label infoLabel = new Label();
-            infoLabel.Text = "Універсальна основа для 7 лабораторних робіт\n" +
-                           "Очікуємо отримання конкретної теми";
-            infoLabel.Font = new Font("Arial", 10);
-            infoLabel.ForeColor = Color.DarkGreen;
-            infoLabel.Size = new Size(400, 50);
-            infoLabel.Location = new Point(50, 200);
-            infoLabel.TextAlign = ContentAlignment.MiddleCenter;
-
-            // 4. Додаємо всі елементи НА ФОРМУ
-            this.Controls.Add(titleLabel);
-            this.Controls.Add(testButton);
-            this.Controls.Add(infoLabel);
+            checkedListBoxLanguages.Items.Clear();
+            foreach (var lang in LanguageManager.GetAllLanguages())
+            {
+                checkedListBoxLanguages.Items.Add(lang, false);
+            }
         }
 
-        private void TestButton_Click(object sender, EventArgs e)
+        private void btnAddLanguage_Click(object sender, EventArgs e)
         {
-            ShowInfo("✅ СИСТЕМА ПРАЦЮЄ КОРЕКТНО!\n\n" +
-                    "• Базова форма: Active\n" +
-                    "• Елементи UI: Loaded\n" +
-                    "• DataService: Ready\n" +
-                    "• Newtonsoft.Json: Installed\n\n" +
-                    "Готово до реалізації лабораторної роботи!");
+            if (!string.IsNullOrWhiteSpace(txtNewLanguage.Text))
+            {
+                LanguageManager.AddLanguage(txtNewLanguage.Text);
+                InitializeLanguageList(); // Оновити список
+                txtNewLanguage.Text = "";
+            }
         }
 
-        protected override void LoadForm()
+        private void btnAddStudent_Click(object sender, EventArgs e)
         {
-            // Для майбутнього використання
+            if (string.IsNullOrWhiteSpace(txtFullName.Text))
+            {
+                MessageBox.Show("Введіть ПІБ студента!");
+                return;
+            }
+
+            var student = new Student
+            {
+                FullName = txtFullName.Text,
+                ProgrammingLanguages = new List<string>()
+            };
+
+            foreach (var item in checkedListBoxLanguages.CheckedItems)
+            {
+                student.ProgrammingLanguages.Add(item.ToString());
+            }
+
+            _students.Add(student);
+            RefreshStudentsGrid();
+            txtFullName.Text = "";
+            ClearLanguageChecks();
         }
 
-        protected override void SaveForm()
+        private void RefreshStudentsGrid()
         {
-            // Для майбутнього використання
+            dataGridViewStudents.DataSource = null;
+            dataGridViewStudents.DataSource = _students.Select(s => new
+            {
+                s.FullName,
+                Мови = s.LanguagesString
+            }).ToList();
+        }
+
+        private void ClearLanguageChecks()
+        {
+            for (int i = 0; i < checkedListBoxLanguages.Items.Count; i++)
+                checkedListBoxLanguages.SetItemChecked(i, false);
+        }
+
+        private void btnShowTable_Click(object sender, EventArgs e)
+        {
+            var secondForm = new SecondForm(_students, LanguageManager.GetAllLanguages());
+            secondForm.Show();
+            this.Hide();
         }
     }
 }

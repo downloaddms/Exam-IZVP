@@ -1,35 +1,19 @@
 ﻿using System;
 using System.Windows.Forms;
+using Exam_IZVP.UI;
 
 namespace Exam_IZVP
 {
-    internal static class Program
+    static class Program
     {
-        /// <summary>
-        /// Головна точка входу для програми
-        /// </summary>
         [STAThread]
         static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            // Ініціалізація папок
-            InitializeFolders();
-
-            // Запуск головної форми
-            Application.Run(new MainForm());
-        }
-
-        static void InitializeFolders()
-        {
-            // Створення необхідних папок, якщо їх немає
-            string[] folders = { "Data", "Exports", "Reports", "Templates" };
-            foreach (var folder in folders)
-            {
-                if (!System.IO.Directory.Exists(folder))
-                    System.IO.Directory.CreateDirectory(folder);
-            }
+            MainForm mainForm = new MainForm();
+            Application.Run(mainForm);
         }
     }
 }

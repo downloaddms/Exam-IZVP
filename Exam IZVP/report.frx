@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="01/01/2023 00:00:00" ReportInfo.Modified="01/01/2023 00:00:00" ReportInfo.CreatorVersion="2023.1.0.0">
+	<Dictionary>
+		<TableDataSource Name="Students" ReferenceName="Data.Students" DataType="System.Int32" Enabled="true">
+			<Column Name="FullName" DataType="System.String"/>
+		</TableDataSource>
+	</Dictionary>
+	<ReportPage Name="Page1" PaperWidth="297" PaperHeight="210" LeftMargin="10" RightMargin="10" TopMargin="10" BottomMargin="10" FirstPageSource="15" OtherPagesSource="15" Guid="a3f8c9f1e2d4b7a6">
+		<ReportTitleBand Name="ReportTitle1" Width="1047.06" Height="75.6">
+			<TextObject Name="Text1" Left="340.2" Top="28.35" Width="377.95" Height="28.35" Text="Студенти та мови програмування" HorzAlign="Center" Font="Arial, 14pt, style=Bold"/>
+		</ReportTitleBand>
+		<PageHeaderBand Name="PageHeader1" Top="79.6" Width="1047.06" Height="28.35">
+			<TextObject Name="Text2" Width="1047.06" Height="28.35" Fill.Color="LightGray" Text="ПІБ студента" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+		</PageHeaderBand>
+		<DataBand Name="Data1" Top="111.95" Width="1047.06" Height="28.35">
+			<TextObject Name="Text3" Width="1047.06" Height="28.35" Text="[Students.FullName]" VertAlign="Center" Font="Arial, 10pt"/>
+		</DataBand>
+		<PageFooterBand Name="PageFooter1" Top="144.3" Width="1047.06" Height="18.9">
+			<TextObject Name="Text4" Left="897.75" Width="151.2" Height="18.9" Text="[PageN]" HorzAlign="Right" Font="Arial, 8pt"/>
+		</PageFooterBand>
+	</ReportPage>
+</Report>
